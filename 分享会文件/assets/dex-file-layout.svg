@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="660" viewBox="0 0 900 660" font-family="PingFang SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif">
+  <rect width="900" height="660" fill="#ffffff"/>
+
+  <text x="60" y="38" font-size="20" font-weight="700" fill="#0f172a">DEX 文件字节布局</text>
+  <text x="60" y="60" font-size="12" fill="#64748b">classes.dex · 小端序 · 所有 *_ids 表定长且连续，data 区变长</text>
+
+  <!-- 图例 -->
+  <rect x="650" y="26" width="14" height="14" rx="3" fill="#cbd5e1" stroke="#94a3b8"/>
+  <text x="670" y="38" font-size="11" fill="#475569">header</text>
+  <rect x="730" y="26" width="14" height="14" rx="3" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="750" y="38" font-size="11" fill="#475569">索引表</text>
+  <rect x="800" y="26" width="14" height="14" rx="3" fill="#d1fae5" stroke="#86efac"/>
+  <text x="820" y="38" font-size="11" fill="#475569">数据区</text>
+
+  <!-- 1 header -->
+  <text x="168" y="120" text-anchor="end" font-size="12.5" font-weight="700" fill="#0f172a">header</text>
+  <rect x="180" y="96" width="430" height="46" rx="6" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="194" y="116" font-size="10.5" fill="#475569" font-family="JetBrains Mono, Consolas, monospace">0x00 – 0x6F</text>
+  <text x="194" y="132" font-size="11" fill="#334155" font-family="JetBrains Mono, Consolas, monospace">magic · checksum · SHA-1 · 各表 size/off · map_off</text>
+  <text x="626" y="112" font-size="10.5" fill="#475569">定长 0x70 字节</text>
+  <text x="626" y="128" font-size="10.5" fill="#475569">便于 mmap 直接定位</text>
+
+  <!-- 2 string_ids -->
+  <text x="168" y="174" text-anchor="end" font-size="12.5" font-weight="700" fill="#0f172a">string_ids</text>
+  <rect x="180" y="150" width="430" height="30" rx="6" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="194" y="170" font-size="11" fill="#1e3a8a" font-family="JetBrains Mono, Consolas, monospace">u4 × N  →  string_data_item（MUTF-8）</text>
+  <text x="626" y="170" font-size="10.5" fill="#475569">字符串全局去重</text>
+
+  <!-- 3 type_ids -->
+  <text x="168" y="212" text-anchor="end" font-size="12.5" font-weight="700" fill="#0f172a">type_ids</text>
+  <rect x="180" y="188" width="430" height="30" rx="6" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="194" y="208" font-size="11" fill="#1e3a8a" font-family="JetBrains Mono, Consolas, monospace">u4 × N  →  string_ids 索引</text>
+  <text x="626" y="208" font-size="10.5" fill="#475569">类型名就是字符串</text>
+
+  <!-- 4 proto_ids -->
+  <text x="168" y="250" text-anchor="end" font-size="12.5" font-weight="700" fill="#0f172a">proto_ids</text>
+  <rect x="180" y="226" width="430" height="30" rx="6" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="194" y="246" font-size="11" fill="#1e3a8a" font-family="JetBrains Mono, Consolas, monospace">12B × N  shorty · return_type · parameters_off</text>
+  <text x="626" y="246" font-size="10.5" fill="#475569">方法签名去重</text>
+
+  <!-- 5 field_ids -->
+  <text x="168" y="288" text-anchor="end" font-size="12.5" font-weight="700" fill="#0f172a">field_ids</text>
+  <rect x="180" y="264" width="430" height="30" rx="6" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="194" y="284" font-size="11" fill="#1e3a8a" font-family="JetBrains Mono, Consolas, monospace">8B × N  class_idx · type_idx · name_idx</text>
+  <text x="626" y="284" font-size="10.5" fill="#475569">字段引用去重</text>
+
+  <!-- 6 method_ids -->
+  <text x="168" y="326" text-anchor="end" font-size="12.5" font-weight="700" fill="#0f172a">method_ids</text>
+  <rect x="180" y="302" width="430" height="30" rx="6" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="194" y="322" font-size="11" fill="#1e3a8a" font-family="JetBrains Mono, Consolas, monospace">8B × N  class_idx · proto_idx · name_idx</text>
+  <text x="626" y="318" font-size="10.5" fill="#dc2626">索引仅 16 位 → 上限 65536</text>
+  <text x="626" y="332" font-size="10.5" fill="#dc2626">这就是 multidex 的根因</text>
+
+  <!-- 7 class_defs -->
+  <text x="168" y="364" text-anchor="end" font-size="12.5" font-weight="700" fill="#0f172a">class_defs</text>
+  <rect x="180" y="340" width="430" height="30" rx="6" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="194" y="360" font-size="11" fill="#1e3a8a" font-family="JetBrains Mono, Consolas, monospace">32B × N  super · interfaces · class_data_off · static_values</text>
+  <text x="626" y="360" font-size="10.5" fill="#475569">类结构本体</text>
+
+  <!-- 8 data -->
+  <text x="168" y="416" text-anchor="end" font-size="12.5" font-weight="700" fill="#0f172a">data</text>
+  <rect x="180" y="378" width="430" height="62" rx="6" fill="#d1fae5" stroke="#6ee7b7"/>
+  <text x="194" y="398" font-size="11" fill="#065f46" font-family="JetBrains Mono, Consolas, monospace">code_item（registers_size / ins / outs / tries）</text>
+  <text x="194" y="414" font-size="11" fill="#065f46" font-family="JetBrains Mono, Consolas, monospace">string_data · type_list · debug_info · annotations</text>
+  <text x="194" y="430" font-size="11" fill="#065f46" font-family="JetBrains Mono, Consolas, monospace">encoded_array（静态初值）· map_list</text>
+  <text x="626" y="404" font-size="10.5" fill="#475569">变长数据都在这</text>
+  <text x="626" y="420" font-size="10.5" fill="#475569">map_list 索引全区</text>
+
+  <!-- 9 link_data -->
+  <text x="168" y="464" text-anchor="end" font-size="12.5" font-weight="700" fill="#64748b">link_data</text>
+  <rect x="180" y="446" width="430" height="26" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-dasharray="4 4"/>
+  <text x="194" y="464" font-size="11" fill="#64748b" font-family="JetBrains Mono, Consolas, monospace">通常为空（动态链接时使用）</text>
+
+  <!-- 说明 -->
+  <rect x="60" y="496" width="780" height="140" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="80" y="522" font-size="12.5" font-weight="700" fill="#0f172a">为什么这样设计？</text>
+  <text x="80" y="548" font-size="11.5" fill="#334155">· 索引表定长且连续 → 随机访问 O(1)，mmap 之后几乎零解析开销</text>
+  <text x="80" y="572" font-size="11.5" fill="#334155">· data 区变长，但全部由 map_list 登记偏移 → 加载器一次遍历即可建立视图</text>
+  <text x="80" y="596" font-size="11.5" fill="#334155">· 字符串 / 类型 / 原型全局去重 → 相同常量只存一份，dex 显著小于等量 class 文件之和</text>
+  <text x="80" y="620" font-size="11.5" fill="#dc2626">· 代价：所有引用索引统一 16 位 → 单 dex 方法引用上限 65536</text>
+</svg>

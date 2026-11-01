@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="620" viewBox="0 0 900 620" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif">
+  <rect width="900" height="620" fill="#fcfcfd"/>
+  <text x="450" y="32" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">JVM 运行时数据区（HotSpot · JDK 8 之后）</text>
+  <text x="450" y="52" text-anchor="middle" font-size="12" fill="#64748b">绿色 = 线程私有 · 蓝色 = 线程共享 · 橙色 = 堆外本地内存</text>
+
+  <rect x="24" y="68" width="852" height="530" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="40" y="92" font-size="13" font-weight="700" fill="#334155">JVM 进程地址空间</text>
+
+  <!-- 线程私有 -->
+  <rect x="40" y="104" width="248" height="330" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.3"/>
+  <text x="54" y="126" font-size="12.5" font-weight="700" fill="#065f46">线程私有 · 随线程生灭</text>
+  <text x="274" y="126" text-anchor="end" font-size="10.5" fill="#047857">x N 个线程</text>
+
+  <rect x="54" y="138" width="220" height="86" rx="6" fill="#ffffff" stroke="#a7f3d0"/>
+  <text x="66" y="158" font-size="12" font-weight="700" fill="#0f766e">程序计数器 PC</text>
+  <text x="66" y="176" font-size="10.5" fill="#475569">当前线程字节码行号 / bci</text>
+  <text x="66" y="193" font-size="10.5" fill="#475569">唯一不抛 OOM 的区域</text>
+  <text x="66" y="212" font-size="10.5" fill="#94a3b8" font-family="ui-monospace,monospace">native 方法时值为 undefined</text>
+
+  <rect x="54" y="232" width="220" height="106" rx="6" fill="#ffffff" stroke="#a7f3d0"/>
+  <text x="66" y="252" font-size="12" font-weight="700" fill="#0f766e">虚拟机栈 VM Stack</text>
+  <text x="66" y="270" font-size="10.5" fill="#475569">元素 = 栈帧 StackFrame</text>
+  <text x="66" y="288" font-size="10.5" fill="#475569">局部变量表 · 操作数栈</text>
+  <text x="66" y="306" font-size="10.5" fill="#475569">动态链接 · 返回地址</text>
+  <text x="66" y="326" font-size="10.5" fill="#b91c1c">-Xss 决定深度 → StackOverflowError</text>
+
+  <rect x="54" y="346" width="220" height="76" rx="6" fill="#ffffff" stroke="#a7f3d0"/>
+  <text x="66" y="366" font-size="12" font-weight="700" fill="#0f766e">本地方法栈</text>
+  <text x="66" y="384" font-size="10.5" fill="#475569">JNI / native 方法帧</text>
+  <text x="66" y="402" font-size="10.5" fill="#475569">HotSpot 中与 VM 栈合并实现</text>
+
+  <!-- 线程共享 -->
+  <rect x="304" y="104" width="300" height="330" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.3"/>
+  <text x="318" y="126" font-size="12.5" font-weight="700" fill="#1e40af">线程共享 · 随 JVM 生灭</text>
+
+  <rect x="318" y="138" width="272" height="140" rx="6" fill="#ffffff" stroke="#bfdbfe"/>
+  <text x="330" y="158" font-size="12" font-weight="700" fill="#1d4ed8">堆 Heap</text>
+  <text x="330" y="175" font-size="10" fill="#475569">存放对象实例与数组</text>
+  <rect x="330" y="184" width="60" height="34" rx="4" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="360" y="205" text-anchor="middle" font-size="10" fill="#1e3a8a">Eden</text>
+  <rect x="396" y="184" width="34" height="34" rx="4" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="413" y="205" text-anchor="middle" font-size="9" fill="#1e3a8a">S0</text>
+  <rect x="434" y="184" width="34" height="34" rx="4" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="451" y="205" text-anchor="middle" font-size="9" fill="#1e3a8a">S1</text>
+  <rect x="330" y="226" width="138" height="30" rx="4" fill="#bfdbfe" stroke="#60a5fa"/>
+  <text x="399" y="246" text-anchor="middle" font-size="10" fill="#1e3a8a">老年代 Old / Tenured</text>
+  <text x="330" y="270" font-size="9.5" fill="#64748b">字符串常量池 StringTable 也在此（JDK7+）</text>
+
+  <rect x="318" y="288" width="272" height="134" rx="6" fill="#ffffff" stroke="#bfdbfe"/>
+  <text x="330" y="308" font-size="12" font-weight="700" fill="#1d4ed8">方法区（实现：Metaspace）</text>
+  <text x="330" y="326" font-size="10.5" fill="#475569">类元数据：Class / Method / Field</text>
+  <text x="330" y="344" font-size="10.5" fill="#475569">运行时常量池（每类一份，懒解析）</text>
+  <text x="330" y="362" font-size="10.5" fill="#475569">类静态变量 · 方法字节码 · 符号表</text>
+  <text x="330" y="382" font-size="10" fill="#b45309">JDK7 及以前 = 永久代 PermGen</text>
+  <text x="330" y="399" font-size="10" fill="#b45309">JDK8+ = Metaspace（落在本地内存）</text>
+  <text x="330" y="416" font-size="10" fill="#b91c1c">-XX:MaxMetaspaceSize → OOM: Metaspace</text>
+
+  <!-- 本地内存 -->
+  <rect x="618" y="104" width="240" height="330" rx="8" fill="#fff7ed" stroke="#f59e0b" stroke-width="1.3"/>
+  <text x="632" y="126" font-size="12.5" font-weight="700" fill="#b45309">堆外 · 本地内存</text>
+
+  <rect x="632" y="138" width="212" height="92" rx="6" fill="#ffffff" stroke="#fed7aa"/>
+  <text x="644" y="158" font-size="12" font-weight="700" fill="#c2410c">Metaspace</text>
+  <text x="644" y="176" font-size="10.5" fill="#475569">类元数据 + 运行时常量池</text>
+  <text x="644" y="194" font-size="10.5" fill="#475569">默认不设上限（受本机内存约束）</text>
+  <text x="644" y="212" font-size="10.5" fill="#94a3b8">-XX:MetaspaceSize 只是首次 GC 水位</text>
+
+  <rect x="632" y="242" width="212" height="86" rx="6" fill="#ffffff" stroke="#fed7aa"/>
+  <text x="644" y="262" font-size="12" font-weight="700" fill="#c2410c">Code Cache</text>
+  <text x="644" y="280" font-size="10.5" fill="#475569">C1 / C2 生成的机器码</text>
+  <text x="644" y="298" font-size="10.5" fill="#475569">-XX:ReservedCodeCacheSize</text>
+  <text x="644" y="316" font-size="10.5" fill="#94a3b8">满了会停止编译并打 warning</text>
+
+  <rect x="632" y="340" width="212" height="82" rx="6" fill="#ffffff" stroke="#fed7aa"/>
+  <text x="644" y="360" font-size="12" font-weight="700" fill="#c2410c">直接内存 Direct Memory</text>
+  <text x="644" y="378" font-size="10.5" fill="#475569">DirectByteBuffer / NIO / Netty</text>
+  <text x="644" y="396" font-size="10.5" fill="#475569">绕过堆，靠 Cleaner 释放</text>
+  <text x="644" y="414" font-size="10.5" fill="#b91c1c">-XX:MaxDirectMemorySize</text>
+
+  <!-- 底部流程条 -->
+  <rect x="40" y="452" width="818" height="126" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="54" y="474" font-size="12" font-weight="700" fill="#334155">一次方法调用在区域间的运动</text>
+  <text x="54" y="498" font-size="11.5" fill="#475569">① 指令流：Code Cache / 解释器 → 读取下一字节码</text>
+  <text x="54" y="520" font-size="11.5" fill="#475569">② new 指令：堆里分配对象 → 引用压入操作数栈</text>
+  <text x="54" y="542" font-size="11.5" fill="#475569">③ 方法解析：动态链接指向运行时常量池 → 解析为直接引用（vtable 索引）</text>
+  <text x="54" y="564" font-size="11.5" fill="#475569">④ 新方法调用：VM 栈压入新帧 → PC 指向新方法首条指令；返回时弹帧，PC 恢复</text>
+  <text x="470" y="474" font-size="11.5" fill="#b45309">⚠ 栈帧对象不在堆里</text>
+  <text x="470" y="498" font-size="11.5" fill="#b45309">（逃逸分析后的标量替换除外）</text>
+  <text x="470" y="520" font-size="11.5" fill="#b45309">⚠ 常量池 ≠ 字符串池：前者每类一份，</text>
+  <text x="470" y="542" font-size="11.5" fill="#b45309">后者全局唯一，位于堆。</text>
+</svg>

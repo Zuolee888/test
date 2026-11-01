@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="700" viewBox="0 0 940 700" font-family="PingFang SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif">
+  <rect width="940" height="700" fill="#ffffff"/>
+
+  <text x="60" y="38" font-size="20" font-weight="700" fill="#0f172a">APK 的物理结构：ZIP 容器 ＋ 签名块</text>
+  <text x="60" y="60" font-size="12" fill="#64748b">按字节顺序自上而下（简化示意，实际每个条目都带自己的本地文件头）</text>
+
+  <!-- 条目 1 -->
+  <rect x="70" y="92" width="470" height="32" rx="5" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="86" y="113" font-size="11.5" fill="#0f172a" font-family="JetBrains Mono, Consolas, monospace">AndroidManifest.xml</text>
+  <text x="556" y="113" font-size="10.5" fill="#475569">二进制 AXML，解析快</text>
+
+  <!-- 2 -->
+  <rect x="70" y="130" width="470" height="32" rx="5" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="86" y="151" font-size="11.5" fill="#1e3a8a" font-family="JetBrains Mono, Consolas, monospace">classes.dex</text>
+  <text x="556" y="151" font-size="10.5" fill="#475569">主 dex，必须含 Application 类</text>
+
+  <!-- 3 -->
+  <rect x="70" y="168" width="470" height="32" rx="5" fill="#dbeafe" stroke="#93c5fd"/>
+  <text x="86" y="189" font-size="11.5" fill="#1e3a8a" font-family="JetBrains Mono, Consolas, monospace">classes2.dex, classes3.dex …</text>
+  <text x="556" y="189" font-size="10.5" fill="#475569">超出 65536 方法引用时出现</text>
+
+  <!-- 4 -->
+  <rect x="70" y="206" width="470" height="32" rx="5" fill="#dcfce7" stroke="#86efac"/>
+  <text x="86" y="227" font-size="11.5" fill="#065f46" font-family="JetBrains Mono, Consolas, monospace">resources.arsc</text>
+  <text x="556" y="227" font-size="10.5" fill="#475569">资源表，R 常量的索引坐标</text>
+
+  <!-- 5 -->
+  <rect x="70" y="244" width="470" height="32" rx="5" fill="#dcfce7" stroke="#86efac"/>
+  <text x="86" y="265" font-size="11.5" fill="#065f46" font-family="JetBrains Mono, Consolas, monospace">res/  （aapt2 编译后的资源）</text>
+  <text x="556" y="265" font-size="10.5" fill="#475569">图片、二进制布局 XML</text>
+
+  <!-- 6 -->
+  <rect x="70" y="282" width="470" height="32" rx="5" fill="#fae8ff" stroke="#d8b4fe"/>
+  <text x="86" y="303" font-size="11.5" fill="#6b21a8" font-family="JetBrains Mono, Consolas, monospace">lib/arm64-v8a/*.so</text>
+  <text x="556" y="303" font-size="10.5" fill="#475569">extractNativeLibs=false 时不解压</text>
+
+  <!-- 7 -->
+  <rect x="70" y="320" width="470" height="32" rx="5" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="86" y="341" font-size="11.5" fill="#0f172a" font-family="JetBrains Mono, Consolas, monospace">assets/  （原样打包）</text>
+  <text x="556" y="341" font-size="10.5" fill="#475569">可被 DexClassLoader 加载</text>
+
+  <!-- 8 -->
+  <rect x="70" y="358" width="470" height="32" rx="5" fill="#fef3c7" stroke="#fbbf24"/>
+  <text x="86" y="379" font-size="11.5" fill="#92400e" font-family="JetBrains Mono, Consolas, monospace">META-INF/  MANIFEST.MF · CERT.SF · CERT.RSA</text>
+  <text x="556" y="379" font-size="10.5" fill="#475569">v1 JAR 签名，逐条目摘要</text>
+
+  <!-- 9 -->
+  <rect x="70" y="396" width="470" height="32" rx="5" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+  <text x="86" y="417" font-size="11.5" fill="#78350f" font-weight="700" font-family="JetBrains Mono, Consolas, monospace">APK Signing Block（v2 / v3）</text>
+  <text x="556" y="410" font-size="10.5" fill="#b45309">整包 Merkle 摘要</text>
+  <text x="556" y="424" font-size="10.5" fill="#b45309">位置：中央目录之前</text>
+
+  <!-- 10 -->
+  <rect x="70" y="434" width="470" height="32" rx="5" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="86" y="455" font-size="11.5" fill="#0f172a" font-family="JetBrains Mono, Consolas, monospace">Central Directory ＋ EOCD</text>
+  <text x="556" y="455" font-size="10.5" fill="#475569">ZIP 索引表</text>
+
+  <!-- 签名覆盖范围 -->
+  <text x="70" y="512" font-size="13" font-weight="700" fill="#0f172a">签名覆盖范围对比</text>
+
+  <text x="70" y="536" font-size="11" fill="#92400e">v1（JAR）：每个条目各自一条摘要 —— 发现不了新增或删除的文件</text>
+  <rect x="70" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="150" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="230" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="310" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="390" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="470" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="550" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="630" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="710" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+  <rect x="790" y="544" width="76" height="26" rx="4" fill="#fef3c7" stroke="#f59e0b"/>
+
+  <text x="70" y="600" font-size="11" fill="#b91c1c">v2 / v3：整文件分块 Merkle 树 —— 任意一个字节变化都会失配</text>
+  <rect x="70" y="608" width="796" height="26" rx="4" fill="#fecaca" stroke="#ef4444"/>
+  <text x="468" y="626" text-anchor="middle" font-size="10.5" fill="#7f1d1d">覆盖：清单 ＋ 全部 dex ＋ 资源 ＋ so ＋ 目录结构（签名块自身除外）</text>
+
+  <text x="70" y="668" font-size="11.5" fill="#0f172a">所以改 smali 的正确顺序只能是：apktool b → zipalign → apksigner sign（用你自己的 keystore）</text>
+</svg>

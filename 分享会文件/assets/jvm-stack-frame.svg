@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="580" viewBox="0 0 900 580" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',system-ui,sans-serif">
+  <rect width="900" height="580" fill="#fcfcfd"/>
+  <text x="450" y="32" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">JVM 栈帧内部结构 · 方法 void foo(int a, long b, String s)</text>
+  <text x="450" y="52" text-anchor="middle" font-size="12" fill="#64748b">每次方法调用压入一个栈帧；帧大小 = max_locals + max_stack + 附加信息，由 javac 写入 Code 属性</text>
+
+  <rect x="40" y="66" width="820" height="486" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="58" y="90" font-size="13" font-weight="700" fill="#334155">Stack Frame（栈帧）</text>
+  <text x="842" y="90" text-anchor="end" font-size="11" fill="#94a3b8">栈顶帧 = 当前正在执行的方法</text>
+
+  <!-- 局部变量表 -->
+  <rect x="60" y="104" width="356" height="340" rx="8" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.3"/>
+  <text x="74" y="126" font-size="12.5" font-weight="700" fill="#5b21b6">局部变量表 Local Variable Table</text>
+  <text x="402" y="126" text-anchor="end" font-size="11" fill="#7c3aed">max_locals = 5 slot</text>
+
+  <rect x="74" y="136" width="328" height="54" rx="6" fill="#ffffff" stroke="#c4b5fd"/>
+  <text x="86" y="156" font-size="10.5" fill="#7c3aed">slot 0</text>
+  <text x="86" y="176" font-size="13.5" font-weight="700" fill="#1e293b">this</text>
+  <text x="390" y="176" text-anchor="end" font-size="11" fill="#64748b" font-family="ui-monospace,monospace">Lcom/example/Foo;</text>
+
+  <rect x="74" y="194" width="328" height="54" rx="6" fill="#ffffff" stroke="#c4b5fd"/>
+  <text x="86" y="214" font-size="10.5" fill="#7c3aed">slot 1</text>
+  <text x="86" y="234" font-size="13.5" font-weight="700" fill="#1e293b">a</text>
+  <text x="390" y="234" text-anchor="end" font-size="11" fill="#64748b" font-family="ui-monospace,monospace">I（32 位）</text>
+
+  <rect x="74" y="252" width="328" height="112" rx="6" fill="#faf5ff" stroke="#8b5cf6" stroke-dasharray="4 3"/>
+  <text x="86" y="272" font-size="10.5" fill="#7c3aed">slot 2</text>
+  <text x="86" y="292" font-size="13.5" font-weight="700" fill="#1e293b">b</text>
+  <text x="390" y="292" text-anchor="end" font-size="11" fill="#64748b" font-family="ui-monospace,monospace">J（64 位）</text>
+  <line x1="74" y1="308" x2="402" y2="308" stroke="#c4b5fd" stroke-dasharray="3 3"/>
+  <text x="86" y="326" font-size="10.5" fill="#7c3aed">slot 3</text>
+  <text x="150" y="326" font-size="11" fill="#9333ea">↑ long 占用相邻两个 slot 的低/高位，整体对齐</text>
+  <text x="86" y="348" font-size="11" fill="#64748b">所以下一个参数从 slot 4 开始，不是 slot 3</text>
+
+  <rect x="74" y="368" width="328" height="54" rx="6" fill="#ffffff" stroke="#c4b5fd"/>
+  <text x="86" y="388" font-size="10.5" fill="#7c3aed">slot 4</text>
+  <text x="86" y="408" font-size="13.5" font-weight="700" fill="#1e293b">s</text>
+  <text x="390" y="408" text-anchor="end" font-size="11" fill="#64748b" font-family="ui-monospace,monospace">Ljava/lang/String;</text>
+
+  <!-- 操作数栈 -->
+  <rect x="484" y="104" width="356" height="340" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.3"/>
+  <text x="498" y="126" font-size="12.5" font-weight="700" fill="#065f46">操作数栈 Operand Stack</text>
+  <text x="826" y="126" text-anchor="end" font-size="11" fill="#047857">max_stack = 4 槽</text>
+
+  <rect x="498" y="140" width="328" height="50" rx="6" fill="#ffffff" stroke="#a7f3d0" stroke-dasharray="4 3"/>
+  <text x="510" y="170" font-size="11" fill="#94a3b8">空闲（下一次 push 的落点）</text>
+
+  <rect x="498" y="196" width="328" height="50" rx="6" fill="#ffffff" stroke="#a7f3d0" stroke-dasharray="4 3"/>
+  <text x="510" y="226" font-size="11" fill="#94a3b8">空闲</text>
+
+  <rect x="498" y="252" width="328" height="50" rx="6" fill="#d1fae5" stroke="#10b981"/>
+  <text x="510" y="272" font-size="10.5" fill="#047857">top → index 2</text>
+  <text x="510" y="292" font-size="13" font-weight="700" fill="#064e3b" font-family="ui-monospace,monospace">Ljava/lang/String; → "sum=3"</text>
+
+  <rect x="498" y="308" width="328" height="50" rx="6" fill="#ffffff" stroke="#10b981"/>
+  <text x="510" y="328" font-size="10.5" fill="#047857">index 1</text>
+  <text x="510" y="348" font-size="13" font-weight="700" fill="#064e3b" font-family="ui-monospace,monospace">I → 3</text>
+
+  <rect x="498" y="364" width="328" height="50" rx="6" fill="#ffffff" stroke="#10b981"/>
+  <text x="510" y="384" font-size="10.5" fill="#047857">index 0（bottom）</text>
+  <text x="510" y="404" font-size="13" font-weight="700" fill="#064e3b" font-family="ui-monospace,monospace">Ljava/io/PrintStream;</text>
+
+  <path d="M452 420 L452 150" stroke="#10b981" stroke-width="1.6" fill="none" marker-end="url(#arrowUp)"/>
+  <defs>
+    <marker id="arrowUp" markerWidth="9" markerHeight="9" refX="4.5" refY="8" orient="auto">
+      <path d="M0,8 L4.5,0 L9,8 z" fill="#10b981"/>
+    </marker>
+  </defs>
+  <text x="446" y="300" text-anchor="end" font-size="10.5" fill="#047857" transform="rotate(-90 446 300)">压栈方向：操作数在栈顶被消费，结果重新压栈</text>
+
+  <!-- 底部四项 -->
+  <rect x="60" y="456" width="240" height="46" rx="6" fill="#fff7ed" stroke="#f59e0b"/>
+  <text x="74" y="474" font-size="11" fill="#b45309">动态链接 Dynamic Linking</text>
+  <text x="74" y="492" font-size="10.5" fill="#92400e" font-family="ui-monospace,monospace">→ 运行时常量池 #13</text>
+
+  <rect x="312" y="456" width="200" height="46" rx="6" fill="#fff7ed" stroke="#f59e0b"/>
+  <text x="326" y="474" font-size="11" fill="#b45309">返回地址</text>
+  <text x="326" y="492" font-size="10.5" fill="#92400e">调用者 PC / 恢复点</text>
+
+  <rect x="524" y="456" width="160" height="46" rx="6" fill="#fff7ed" stroke="#f59e0b"/>
+  <text x="538" y="474" font-size="11" fill="#b45309">锁记录</text>
+  <text x="538" y="492" font-size="10.5" fill="#92400e">synchronized 信息</text>
+
+  <rect x="696" y="456" width="156" height="46" rx="6" fill="#fff7ed" stroke="#f59e0b"/>
+  <text x="710" y="474" font-size="11" fill="#b45309">帧附加信息</text>
+  <text x="710" y="492" font-size="10.5" fill="#92400e">JIT 用 oop map</text>
+</svg>

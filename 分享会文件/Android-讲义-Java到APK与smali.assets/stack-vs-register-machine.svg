@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" font-family="PingFang SC, Noto Sans CJK SC, Microsoft YaHei, sans-serif">
+  <rect width="960" height="620" fill="#ffffff"/>
+
+  <text x="480" y="38" text-anchor="middle" font-size="21" font-weight="700" fill="#0f172a">同一段代码：JVM 栈机 vs DEX 寄存器机</text>
+  <text x="480" y="62" text-anchor="middle" font-size="12.5" fill="#64748b" font-family="JetBrains Mono, Consolas, monospace">int add(int a, int b) { return a + b; }</text>
+
+  <!-- ============ 左：JVM 栈机 ============ -->
+  <rect x="28" y="82" width="432" height="392" rx="10" fill="#fbfcfe" stroke="#cbd5e1"/>
+  <text x="48" y="112" font-size="16" font-weight="700" fill="#1e3a8a">JVM 栈机（HotSpot）</text>
+  <text x="48" y="134" font-size="11.5" fill="#475569">局部变量表 max_locals = 3</text>
+
+  <rect x="48" y="142" width="130" height="32" rx="6" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="113" y="163" text-anchor="middle" font-size="12" fill="#1e3a8a">slot 0 · this</text>
+  <rect x="186" y="142" width="130" height="32" rx="6" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="251" y="163" text-anchor="middle" font-size="12" fill="#1e3a8a">slot 1 · a</text>
+  <rect x="324" y="142" width="130" height="32" rx="6" fill="#dbeafe" stroke="#60a5fa"/>
+  <text x="389" y="163" text-anchor="middle" font-size="12" fill="#1e3a8a">slot 2 · b</text>
+
+  <text x="48" y="200" font-size="11.5" fill="#475569">操作数栈 max_stack = 2（栈顶在下）</text>
+  <rect x="48" y="208" width="130" height="70" rx="6" fill="#eef2ff" stroke="#818cf8"/>
+  <line x1="48" y1="243" x2="178" y2="243" stroke="#818cf8" stroke-dasharray="3 3"/>
+  <text x="113" y="230" text-anchor="middle" font-size="11" fill="#6366f1">栈底</text>
+  <text x="113" y="266" text-anchor="middle" font-size="11.5" fill="#3730a3" font-weight="600">a + b（栈顶）</text>
+
+  <rect x="200" y="208" width="248" height="30" rx="5" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="212" y="228" font-size="11.5" fill="#312e81" font-family="JetBrains Mono, Consolas, monospace">1  iload_1   压入 a</text>
+  <rect x="200" y="246" width="248" height="30" rx="5" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="212" y="266" font-size="11.5" fill="#312e81" font-family="JetBrains Mono, Consolas, monospace">2  iload_2   压入 b</text>
+  <rect x="200" y="284" width="248" height="30" rx="5" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="212" y="304" font-size="11.5" fill="#312e81" font-family="JetBrains Mono, Consolas, monospace">3  iadd      弹两个压回和</text>
+  <rect x="200" y="322" width="248" height="30" rx="5" fill="#eef2ff" stroke="#c7d2fe"/>
+  <text x="212" y="342" font-size="11.5" fill="#312e81" font-family="JetBrains Mono, Consolas, monospace">4  ireturn   弹出并返回</text>
+
+  <text x="48" y="374" font-size="11.5" fill="#475569">每条指令只做一个动作，操作数位置由栈顶隐含决定。</text>
+  <text x="48" y="396" font-size="11.5" fill="#475569">max_stack / max_locals 编译期算死，写进 Code 属性。</text>
+  <text x="48" y="418" font-size="11.5" fill="#475569">值一旦被弹出就无法再引用，需要 aload 重新压入。</text>
+  <text x="48" y="446" font-size="11.5" fill="#64748b">→ 7 条指令完成 a+b 与字段读写</text>
+
+  <!-- ============ 右：DEX 寄存器机 ============ -->
+  <rect x="500" y="82" width="432" height="392" rx="10" fill="#fbfefc" stroke="#cbd5e1"/>
+  <text x="520" y="112" font-size="16" font-weight="700" fill="#065f46">DEX 寄存器机（ART）</text>
+  <text x="520" y="134" font-size="11.5" fill="#475569">.locals 1 ＋ 3 个参数（含 this）→ .registers 4</text>
+
+  <rect x="520" y="142" width="96" height="32" rx="6" fill="#d1fae5" stroke="#34d399"/>
+  <text x="568" y="163" text-anchor="middle" font-size="11" fill="#065f46">v0 · 临时</text>
+  <rect x="623" y="142" width="96" height="32" rx="6" fill="#d1fae5" stroke="#34d399"/>
+  <text x="671" y="163" text-anchor="middle" font-size="11" fill="#065f46">v1 = p0 this</text>
+  <rect x="726" y="142" width="96" height="32" rx="6" fill="#d1fae5" stroke="#34d399"/>
+  <text x="774" y="163" text-anchor="middle" font-size="11" fill="#065f46">v2 = p1 a</text>
+  <rect x="829" y="142" width="96" height="32" rx="6" fill="#d1fae5" stroke="#34d399"/>
+  <text x="877" y="163" text-anchor="middle" font-size="11" fill="#065f46">v3 = p2 b</text>
+
+  <text x="520" y="200" font-size="11.5" fill="#475569">参数寄存器排在数组高端；long / double 占两个连续寄存器</text>
+
+  <rect x="520" y="210" width="396" height="126" rx="8" fill="#0f172a"/>
+  <text x="534" y="236" font-size="12" fill="#e2e8f0" font-family="JetBrains Mono, Consolas, monospace">add-int v0, p1, p2</text>
+  <text x="534" y="260" font-size="12" fill="#e2e8f0" font-family="JetBrains Mono, Consolas, monospace">iput  v0, p0, LFoo;-&gt;count:I</text>
+  <text x="534" y="284" font-size="12" fill="#e2e8f0" font-family="JetBrains Mono, Consolas, monospace">iget  v0, p0, LFoo;-&gt;count:I</text>
+  <text x="534" y="308" font-size="12" fill="#e2e8f0" font-family="JetBrains Mono, Consolas, monospace">return v0</text>
+  <text x="534" y="328" font-size="10.5" fill="#94a3b8" font-family="JetBrains Mono, Consolas, monospace">4 条指令抵掉左侧的 7 条</text>
+
+  <text x="520" y="364" font-size="11.5" fill="#475569">一条指令显式编码「读哪几个寄存器、写到哪」，</text>
+  <text x="520" y="386" font-size="11.5" fill="#475569">指令更少但单条更长；编号由 d8 做寄存器分配得出。</text>
+  <text x="520" y="414" font-size="11.5" fill="#475569">寄存器无类型：同一 v0 上一刻存 int，下一刻可存引用。</text>
+  <text x="520" y="446" font-size="11.5" fill="#64748b">→ 4 条指令完成同样的事</text>
+
+  <!-- ============ 底部结论 ============ -->
+  <rect x="28" y="492" width="904" height="104" rx="10" fill="#f8fafc" stroke="#cbd5e1"/>
+  <text x="48" y="520" font-size="12" fill="#334155">栈机：操作数隐含在栈顶，指令短、条数多，验证器靠「类型栈」推导</text>
+  <text x="48" y="546" font-size="12" fill="#334155">寄存器机：操作数显式编码，指令少、单条长，验证器靠「每个寄存器的类型状态」推导</text>
+  <text x="48" y="572" font-size="12" fill="#334155">两者语义等价 —— 差别只在「如何定位操作数」，这正是 d8 必须重做寄存器分配的根因</text>
+</svg>
